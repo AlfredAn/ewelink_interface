@@ -1,21 +1,25 @@
 const ewelink = require('ewelink-api')
 const jsonfile = require('jsonfile')
+const express = require('express')
 
-config = jsonfile.readFileSync('config.json')
+const config = jsonfile.readFileSync('config.json')
 
-const connection = new ewelink({
-  email: config.email,
-  password: config.password,
-  region: config.region
-})
-
-function main() {
-  command = process.argv[2]
-  if (command == "off") {
-    connection.setDevicePowerState(config.deviceid, "off")
-  } else if (command == "on") {
-    connection.setDevicePowerState(config.deviceid, "on")
-  }
+function ewlConnect() {
+	return new ewelink({
+		email: config.email,
+		password: config.password,
+		region: config.region
+	})
 }
 
-main()
+const app = express()
+
+app.listen(config.port, config.hostname, () => {
+	console.log("started server on port %d", config.port)
+})
+
+app.post('/setPowerState/:enabled', function (req, res) {
+	newState = req.params.enabled == 'on' ? 'on' : 'off'
+	ewlConnect().setDevicePowerState(config.deviceid, newState)
+	res.send("success")
+})

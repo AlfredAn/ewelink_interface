@@ -1,0 +1,8 @@
+{
+    "email": "example@example.com",
+    "password": "1234",
+    "region": "eu",
+    "deviceid": "0000000000",
+    "hostname": "192.168.1.3",
+    "port": 13337
+}
